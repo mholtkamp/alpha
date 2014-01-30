@@ -102,6 +102,11 @@ public class Letter extends Button{
 		poolPos = i;
 	}
 	
+	public int getPoolPos()
+	{
+		return poolPos;
+	}
+	
 	public boolean inCandidate()
 	{
 		return inCandidate;
@@ -113,6 +118,10 @@ public class Letter extends Button{
 		candidatePos = i;
 	}
 	
+	public int getCandidatePos()
+	{
+		return candidatePos;
+	}
 	public void clearCandidate()
 	{
 		inCandidate = false;
@@ -128,8 +137,6 @@ public class Letter extends Button{
 		else
 			font.setColor(0.0f,0.0f,0.0f,1.0f);
 		font.draw(batch,""+value, box.x + FONT_X_OFFSET, box.y + FONT_Y_OFFSET);
-		
-		
 	}
 	
 }
