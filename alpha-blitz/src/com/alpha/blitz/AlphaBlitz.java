@@ -1,5 +1,6 @@
 package com.alpha.blitz;
 
+import game.Game;
 import menu.Menu;
 
 import com.badlogic.gdx.ApplicationListener;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -25,6 +27,7 @@ public class AlphaBlitz implements ApplicationListener {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private Menu menu;
+	private Game game;
 
 	
 	@Override
@@ -40,8 +43,9 @@ public class AlphaBlitz implements ApplicationListener {
 		loadAssets();
 		
 		menu = new Menu();
+		game = new Game();
 		gamestate = GameState.MENU;
-		
+		Gdx.gl.glClearColor(1, 1, 1, 1);
 
 	}
 
@@ -56,6 +60,9 @@ public class AlphaBlitz implements ApplicationListener {
 		  manager.load("data/startButtonTex.png",Texture.class);
 		  manager.load("data/optionsButtonTex.png",Texture.class);
 		  manager.load("data/exitButtonTex.png",Texture.class);
+		  manager.load("data/letterTex.png",Texture.class);
+		  
+		  manager.load("data/nint.fnt",BitmapFont.class);
           manager.update();
           manager.finishLoading();
 	}
@@ -90,7 +97,7 @@ public class AlphaBlitz implements ApplicationListener {
 	
 	private void updateGame()
 	{
-		
+		game.update();
 	}
 	
 	private void updatePostGame()
@@ -108,7 +115,7 @@ public class AlphaBlitz implements ApplicationListener {
 	{
 		update();
 		
-		Gdx.gl.glClearColor(1, 1, 1, 1);
+		
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		batch.setProjectionMatrix(camera.combined);
@@ -145,7 +152,7 @@ public class AlphaBlitz implements ApplicationListener {
 	
 	private void renderGame()
 	{
-		
+		game.render(batch);
 	}
 	
 	private void renderPostGame()

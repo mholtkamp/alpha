@@ -11,10 +11,10 @@ public class Button {
 	private final int DEFAULT_WIDTH = 64;
 	private final int DEFAULT_HEIGHT = 32;
 	
-	private Rectangle box;
-	private Texture texture;
-	private boolean pressed;
-	private boolean activated;
+	protected Rectangle box;
+	protected Texture texture;
+	protected boolean pressed;
+	protected boolean activated;
 	
 	public Button()
 	{

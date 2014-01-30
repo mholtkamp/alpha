@@ -42,6 +42,7 @@ public class Menu {
 		if(startButton.isActivated())
 		{
 			resetMenu();
+			Gdx.gl.glClearColor(0.8f, 0.8f, 1.0f, 1.0f);
 			AlphaBlitz.gamestate = GameState.GAME;
 		}
 		else if(optionsButton.isActivated())
