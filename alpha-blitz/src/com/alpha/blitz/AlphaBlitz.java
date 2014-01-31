@@ -60,8 +60,15 @@ public class AlphaBlitz implements ApplicationListener {
 		  manager.load("data/startButtonTex.png",Texture.class);
 		  manager.load("data/optionsButtonTex.png",Texture.class);
 		  manager.load("data/exitButtonTex.png",Texture.class);
+		  
 		  manager.load("data/letterTex.png",Texture.class);
 		  manager.load("data/candidateBarTex.png",Texture.class);
+		  manager.load("data/backButtonTex.png",Texture.class);
+		  manager.load("data/checkButtonTex.png",Texture.class);
+		  manager.load("data/scrambleButtonTex.png",Texture.class);
+		  manager.load("data/nextButtonTex.png",Texture.class);
+		  manager.load("data/prevQueueBgTex.png",Texture.class);
+		  
 		  manager.load("data/nint.fnt",BitmapFont.class);
           manager.update();
           manager.finishLoading();
