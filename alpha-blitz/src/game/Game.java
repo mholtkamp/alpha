@@ -45,6 +45,23 @@ public class Game {
 	private final int TIME_X = 620;
 	private final int TIME_Y = 420;
 	
+	private final int SCORE_X = TIME_X;
+	private final int SCORE_Y = 390;
+	
+	private final int COUNTER_X = 50;
+	private final int COUNTER_Y = 300;
+	private final int COUNTER_WIDTH = 148;
+	private final int COUNTER_HEIGHT = 148;
+	
+	private final int TOTAL_WORDS_X = 97;
+	private final int TOTAL_WORDS_Y = 355;
+	
+	private final int CURRENT_WORDS_X = 97;
+	private final int CURRENT_WORDS_Y = 415;
+	
+	private int totalWords;
+	private int currentWords;
+	
 	
 	private Button backButton;
 	private Button checkButton;
@@ -56,10 +73,12 @@ public class Game {
 	private BitmapFont font;
 	private ArrayList<Letter> pool;
 	private ArrayList<Letter> candidate;
+	private ArrayList<String> roundWordlist;
 	private ArrayList<String> prevWords;
 	private PrevQueue prevQueue;
 	
 	private Texture candidateBarTex;
+	private Texture counterTex;
 
 	public Game()
 	{
@@ -67,7 +86,9 @@ public class Game {
 		score = 0;
 		pool = new ArrayList<Letter>();
 		candidate = new ArrayList<Letter>();
-		candidateBarTex = AlphaBlitz.manager.get("data/candidateBarTex.png");
+		roundWordlist = new ArrayList<String>();
+		candidateBarTex = AlphaBlitz.manager.get("data/candidateBarTex.png",Texture.class);
+		counterTex = AlphaBlitz.manager.get("data/progressTex.png",Texture.class);
 		
 		backButton = new Button(BACK_BUTTON_X,BACK_BUTTON_Y,CONTROL_BUTTON_WIDTH,CONTROL_BUTTON_HEIGHT);
 		checkButton = new Button(CHECK_BUTTON_X,CHECK_BUTTON_Y,CONTROL_BUTTON_WIDTH,CONTROL_BUTTON_HEIGHT);
@@ -85,6 +106,14 @@ public class Game {
 		font = AlphaBlitz.manager.get("data/nint.fnt",BitmapFont.class);
 	
 		
+		generateSemiRandomPool();
+		
+		
+		
+	}
+	
+	private void generateSemiRandomPool()
+	{
 		for(int i=0; i < POOL_SIZE; i++)
 		{
 			if(i < 2)
@@ -96,9 +125,29 @@ public class Game {
 			pool.get(i).setBox(POOL_X + POOL_X_PADDING*i + Letter.DEFAULT_LETTER_WIDTH*i,POOL_Y);
 		}
 		
-		//TEST
-		printPool();
-		//END
+		String poolstr = "";
+		for(int i =0; i < pool.size(); i++)
+			poolstr+= pool.get(i).getValue();
+		System.out.println("poolstr: "+ poolstr);
+		
+		for(int i = 0; i < pool.size(); i++)
+			generateValidWords(poolstr.substring(i,i+1),poolstr.substring(0,i) + poolstr.substring(i+1, poolstr.length()));
+		
+		totalWords = roundWordlist.size();
+	}
+	
+	private void generateValidWords(String cur, String rem)
+	{
+		if(!rem.equals(""))
+		{
+			for(int i = 0; i < rem.length(); i++)
+				generateValidWords(cur + rem.substring(i,i+1),rem.substring(0,i)+rem.substring(i+1,rem.length()));
+		}
+		if(AlphaBlitz.wordlist.contains(cur.toLowerCase()) && (cur.length() >= 3) && !roundWordlist.contains(cur))
+		{
+			roundWordlist.add(cur);
+			
+		}
 		
 	}
 	
@@ -113,6 +162,8 @@ public class Game {
 	public void render(SpriteBatch batch)
 	{
 		batch.draw(candidateBarTex, CAND_X, CAND_Y, CAND_WIDTH, CAND_HEIGHT);
+		batch.draw(counterTex, COUNTER_X,COUNTER_Y, COUNTER_WIDTH,COUNTER_HEIGHT);
+		
 		for(int i = 0; i < pool.size(); i++)
 		{
 			pool.get(i).render(batch);
@@ -127,7 +178,22 @@ public class Game {
 		
 		font.setColor(0f,0f,0f,1f);
 		font.setScale(1.8f);
-		font.draw(batch, ""+ ((int) time) + " SEC", TIME_X, TIME_Y);
+		font.draw(batch, ""+ ((int) time/60) + ":" + ((int) time)%60, TIME_X, TIME_Y);
+		font.draw(batch, ""+ score + " PTS",SCORE_X,SCORE_Y);
+		
+		font.setScale(2.2f);
+		
+		if((""+currentWords).length() == 1)
+			font.draw(batch, ""+currentWords, CURRENT_WORDS_X + 12, CURRENT_WORDS_Y);
+		else
+		font.draw(batch, ""+currentWords, CURRENT_WORDS_X, CURRENT_WORDS_Y);
+		
+		if((""+totalWords).length() == 1)
+			font.draw(batch, ""+totalWords, TOTAL_WORDS_X + 12, TOTAL_WORDS_Y);
+		else
+			font.draw(batch, ""+totalWords, TOTAL_WORDS_X, TOTAL_WORDS_Y);
+		
+		
 		
 		
 	}
@@ -164,6 +230,7 @@ public class Game {
 					prevQueue.push(candStr);
 					awardPoints(candStr);
 					awardTime(candStr);
+					currentWords++;
 				}
 			}
 			clearCandidate();
@@ -209,7 +276,7 @@ public class Game {
 	}
 	private void awardPoints(String candStr)
 	{
-		
+		score += (candStr.length()*candStr.length());
 	}
 	
 	private void awardTime(String candStr)
@@ -219,7 +286,10 @@ public class Game {
 	
 	private boolean findMatch(String str)
 	{
-		return true;
+		if(roundWordlist.contains(str))
+			return true;
+		else
+			return false;
 	}
 	private String lettersToString(ArrayList<Letter> letters)
 	{

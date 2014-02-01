@@ -1,11 +1,17 @@
 package com.alpha.blitz;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.util.HashSet;
+import java.util.Scanner;
+
 import game.Game;
 import menu.Menu;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -28,6 +34,7 @@ public class AlphaBlitz implements ApplicationListener {
 	private SpriteBatch batch;
 	private Menu menu;
 	private Game game;
+	public static HashSet<String> wordlist;
 
 	
 	@Override
@@ -35,13 +42,17 @@ public class AlphaBlitz implements ApplicationListener {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
-		
+
 		camera = new OrthographicCamera(1, h/w);
 		camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
 		batch = new SpriteBatch();
 		manager = new AssetManager();
 		loadAssets();
 		
+		wordlist =  new HashSet(45402);
+
+		fillWordList();
+
 		menu = new Menu();
 		game = new Game();
 		gamestate = GameState.MENU;
@@ -68,6 +79,7 @@ public class AlphaBlitz implements ApplicationListener {
 		  manager.load("data/scrambleButtonTex.png",Texture.class);
 		  manager.load("data/nextButtonTex.png",Texture.class);
 		  manager.load("data/prevQueueBgTex.png",Texture.class);
+		  manager.load("data/progressTex.png",Texture.class);
 		  
 		  manager.load("data/nint.fnt",BitmapFont.class);
           manager.update();
@@ -170,6 +182,17 @@ public class AlphaBlitz implements ApplicationListener {
 	private void renderOptions()
 	{
 		
+	}
+	
+	private void fillWordList()
+	{
+		FileHandle handle = Gdx.files.internal("data/words.txt");
+		InputStream fstream = handle.read();
+		Scanner in = new Scanner(fstream);
+
+		while(in.hasNext())
+			wordlist.add(in.next());
+		in.close();
 	}
 	
 	@Override
