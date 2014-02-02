@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import menu.Button;
 
 import com.alpha.blitz.AlphaBlitz;
+import com.alpha.blitz.GameState;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -104,9 +105,16 @@ public class Game {
 		prevWords = new ArrayList<String>();
 		
 		font = AlphaBlitz.manager.get("data/nint.fnt",BitmapFont.class);
-	
 		
-		generateSemiRandomPool();
+		totalWords = 0;
+		currentWords = 0;
+	
+		while(true)
+		{
+			generateSemiRandomPool();
+			if(totalWords >= 10)
+				break;
+		}
 		
 		
 		
@@ -114,6 +122,9 @@ public class Game {
 	
 	private void generateSemiRandomPool()
 	{
+		pool.clear();
+		roundWordlist.clear();
+		currentWords = 0;
 		for(int i=0; i < POOL_SIZE; i++)
 		{
 			if(i < 2)
@@ -134,6 +145,7 @@ public class Game {
 			generateValidWords(poolstr.substring(i,i+1),poolstr.substring(0,i) + poolstr.substring(i+1, poolstr.length()));
 		
 		totalWords = roundWordlist.size();
+		System.out.println(totalWords);
 	}
 	
 	private void generateValidWords(String cur, String rem)
@@ -144,10 +156,7 @@ public class Game {
 				generateValidWords(cur + rem.substring(i,i+1),rem.substring(0,i)+rem.substring(i+1,rem.length()));
 		}
 		if(AlphaBlitz.wordlist.contains(cur.toLowerCase()) && (cur.length() >= 3) && !roundWordlist.contains(cur))
-		{
 			roundWordlist.add(cur);
-			
-		}
 		
 	}
 	
@@ -201,6 +210,11 @@ public class Game {
 	public void update()
 	{
 		time -= Gdx.graphics.getDeltaTime();
+		if(time <= 0)
+		{
+			AlphaBlitz.gamestate = GameState.POSTGAME;
+			AlphaBlitz.postgame.setPoints(score);
+		}
 		for(int i = 0; i < pool.size(); i++)
 		{
 			pool.get(i).update();
@@ -262,6 +276,22 @@ public class Game {
 				pool.add(newPool[i]);
 				updatePosition(pool.get(i));
 			}
+		}
+		
+		if(nextButton.isActivated())
+		{
+			nextButton.clearActivation();
+			if(currentWords >= 5)
+			{
+				while(true)
+				{
+					generateSemiRandomPool();
+					if(totalWords >= 10)
+						break;
+				}
+				prevQueue.clear();
+			}
+			
 		}
 	}
 	
@@ -329,5 +359,24 @@ public class Game {
 			letter.setBox(POOL_X + POOL_X_PADDING*letter.getPoolPos() + Letter.DEFAULT_LETTER_WIDTH*letter.getPoolPos(),POOL_Y);
 		else
 			letter.setBox(POOL_X + POOL_X_PADDING*letter.getCandidatePos() + Letter.DEFAULT_LETTER_WIDTH*letter.getCandidatePos(),CAND_Y+CAND_Y_OFFSET);
+	}
+	
+	public void reset()
+	{
+		time = START_TIME;
+		score = 0;
+		currentWords = 0;
+		prevQueue.clear();
+		candidate.clear();
+		
+		while(true)
+		{
+			generateSemiRandomPool();
+			if(totalWords >= 10)
+				break;
+		}
+		
+		
+		
 	}
 }

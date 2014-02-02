@@ -42,13 +42,13 @@ public class Menu {
 		if(startButton.isActivated())
 		{
 			resetMenu();
-			Gdx.gl.glClearColor(0.8f, 0.8f, 1.0f, 1.0f);
 			AlphaBlitz.gamestate = GameState.GAME;
+			AlphaBlitz.game.reset();
 		}
 		else if(optionsButton.isActivated())
 		{
 			resetMenu();
-			AlphaBlitz.gamestate = GameState.OPTIONS;
+			//AlphaBlitz.gamestate = GameState.OPTIONS;
 		}
 		else if(exitButton.isActivated())
 		{

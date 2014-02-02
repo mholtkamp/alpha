@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 
 public class Button {
 	private final int DEFAULT_WIDTH = 64;
@@ -15,6 +16,7 @@ public class Button {
 	protected Texture texture;
 	protected boolean pressed;
 	protected boolean activated;
+	protected Vector3 touchPos;
 	
 	public Button()
 	{
@@ -25,6 +27,7 @@ public class Button {
 		box.height = DEFAULT_HEIGHT;
 		pressed = false;
 		activated = false;
+		touchPos = new Vector3();
 	}
 	
 	public Button(int x, int y)
@@ -45,11 +48,16 @@ public class Button {
 	
 	public void update()
 	{
+		if(Gdx.input.isTouched())
+		{
+			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			AlphaBlitz.camera.unproject(touchPos);
+		}
 		if(Gdx.input.justTouched())
 		{
 			if(!pressed)
-			{
-				if(box.contains(Gdx.input.getX(),AlphaBlitz.SCREEN_HEIGHT - Gdx.input.getY()))
+			{			    
+				if(box.contains(touchPos.x,touchPos.y))
 				{
 					pressed = true;
 				}
@@ -57,7 +65,7 @@ public class Button {
 		}
 		else if(pressed)
 		{
-			if(Gdx.input.isTouched() && !box.contains(Gdx.input.getX(),AlphaBlitz.SCREEN_HEIGHT - Gdx.input.getY()))
+			if(Gdx.input.isTouched() && !box.contains(touchPos.x,touchPos.y))
 			{
 				pressed = false;
 			}

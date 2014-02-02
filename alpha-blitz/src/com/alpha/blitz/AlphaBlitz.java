@@ -5,6 +5,9 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Scanner;
 
+import postgame.Postgame;
+import util.DictionaryLoader;
+
 import game.Game;
 import menu.Menu;
 
@@ -30,33 +33,38 @@ public class AlphaBlitz implements ApplicationListener {
 	public static GameState gamestate;
 	
 	
-	private OrthographicCamera camera;
+	public static OrthographicCamera camera;
 	private SpriteBatch batch;
-	private Menu menu;
-	private Game game;
+	public static Menu menu;
+	public static Game game;
+	public static Postgame postgame;
 	public static HashSet<String> wordlist;
+	
+	private DictionaryLoader dl;
+	private BitmapFont font;
+	private boolean assetsLoaded;
 
 	
 	@Override
 	public void create() {		
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
 		
-
-		camera = new OrthographicCamera(1, h/w);
+		//camera = new OrthographicCamera(1, h/w);
+		camera = new OrthographicCamera();
 		camera.setToOrtho(false, SCREEN_WIDTH, SCREEN_HEIGHT);
 		batch = new SpriteBatch();
 		manager = new AssetManager();
 		loadAssets();
 		
-		wordlist =  new HashSet(45402);
+		font = manager.get("data/nint.fnt",BitmapFont.class);
+		
+		wordlist =  new HashSet<String>(45402);
 
-		fillWordList();
+		dl = new DictionaryLoader();
+		assetsLoaded = false;
+		//dl.run();
+		Gdx.gl.glClearColor(0.8f, 0.8f, 1.0f, 1.0f);
+		gamestate = GameState.SPLASH;
 
-		menu = new Menu();
-		game = new Game();
-		gamestate = GameState.MENU;
-		Gdx.gl.glClearColor(1, 1, 1, 1);
 
 	}
 
@@ -67,6 +75,10 @@ public class AlphaBlitz implements ApplicationListener {
 
 	public void loadAssets()
 	{
+		  manager.load("data/nint.fnt",BitmapFont.class);
+          manager.update();
+          manager.finishLoading();
+          
 		  manager.load("data/menuTex.png",Texture.class);
 		  manager.load("data/startButtonTex.png",Texture.class);
 		  manager.load("data/optionsButtonTex.png",Texture.class);
@@ -81,9 +93,7 @@ public class AlphaBlitz implements ApplicationListener {
 		  manager.load("data/prevQueueBgTex.png",Texture.class);
 		  manager.load("data/progressTex.png",Texture.class);
 		  
-		  manager.load("data/nint.fnt",BitmapFont.class);
-          manager.update();
-          manager.finishLoading();
+		  manager.update();
 	}
 	
 	private void update()
@@ -106,7 +116,18 @@ public class AlphaBlitz implements ApplicationListener {
 	
 	private void updateSplash()
 	{
-		
+		if(manager.update())
+		{
+			assetsLoaded = true;
+			dl.run();
+		}
+		if( dl.finished)
+		{
+			gamestate = GameState.MENU;		
+			menu = new Menu();
+			game = new Game();
+			postgame = new Postgame();
+		}
 	}
 	
 	private void updateMenu()
@@ -121,7 +142,7 @@ public class AlphaBlitz implements ApplicationListener {
 	
 	private void updatePostGame()
 	{
-		
+		postgame.update();
 	}
 	
 	private void updateOptions()
@@ -134,7 +155,7 @@ public class AlphaBlitz implements ApplicationListener {
 	{
 		update();
 		
-		
+		Gdx.gl.glClearColor(0.8f, 0.8f, 1.0f, 1.0f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		batch.setProjectionMatrix(camera.combined);
@@ -161,7 +182,9 @@ public class AlphaBlitz implements ApplicationListener {
 	
 	private void renderSplash()
 	{
-		
+		font.setScale(3.0f);
+		font.setColor(0f, 0f, 0f, 1f);
+		font.draw(batch,"LOADING",250,250);
 	}
 	
 	private void renderMenu()
@@ -176,7 +199,7 @@ public class AlphaBlitz implements ApplicationListener {
 	
 	private void renderPostGame()
 	{
-		
+		postgame.render(batch);
 	}
 	
 	private void renderOptions()

@@ -15,7 +15,7 @@ public class PrevQueue {
 	private final int BOX_WIDTH = 310;
 	private final int BOX_HEIGHT = 165;
 	
-	private final int WORDS_START_X = 310;
+	private final int WORDS_START_X = 330;
 	private final int WORDS_START_Y = 320;
 	private final int WORDS_Y_OFFSET = 30;
 	private final float FONT_SCALE = 1.8f;
@@ -44,6 +44,10 @@ public class PrevQueue {
 			font.draw(batch, words.get(i), WORDS_START_X, WORDS_START_Y + i*WORDS_Y_OFFSET);
 	}
 	
+	public void clear()
+	{
+		words.clear();
+	}
 	public void push(String word)
 	{
 		if(words.size() >= MAX_WORDS)
