@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g3d.Environment;
 
 public class AlphaBlitz implements ApplicationListener {
 	
@@ -34,6 +35,7 @@ public class AlphaBlitz implements ApplicationListener {
 	
 	
 	public static OrthographicCamera camera;
+	public static int highScore;
 	private SpriteBatch batch;
 	public static Menu menu;
 	public static Game game;
@@ -66,6 +68,18 @@ public class AlphaBlitz implements ApplicationListener {
 		//dl.run();
 		Gdx.gl.glClearColor(0.8f, 0.8f, 1.0f, 1.0f);
 		gamestate = GameState.SPLASH;
+		
+		FileHandle hsf = Gdx.files.external("hsf.txt");
+		if(hsf.exists())
+		{
+			highScore = Integer.parseInt(hsf.readString());
+		}
+		else
+		{
+			hsf.writeString("0", false);
+			highScore = 0;
+		}
+		System.out.println(highScore);
 
 	}
 

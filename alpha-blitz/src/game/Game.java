@@ -245,6 +245,7 @@ public class Game {
 		time -= Gdx.graphics.getDeltaTime();
 		if(time <= 0)
 		{
+			processScore();
 			AlphaBlitz.gamestate = GameState.POSTGAME;
 			AlphaBlitz.postgame.setPoints(score);
 		}
@@ -391,6 +392,15 @@ public class Game {
 			letter.setBox(POOL_X + POOL_X_PADDING*letter.getCandidatePos() + Letter.DEFAULT_LETTER_WIDTH*letter.getCandidatePos(),CAND_Y+CAND_Y_OFFSET);
 	}
 	
+	private void processScore()
+	{
+		if(score > AlphaBlitz.highScore)
+		{
+			AlphaBlitz.highScore = score;
+			Gdx.files.external("hsf.txt").writeString(""+score, false);
+		}
+			
+	}
 	public void reset()
 	{
 		time = START_TIME;
@@ -400,8 +410,5 @@ public class Game {
 		candidate.clear();
 		
 		fetchGoodPool();
-		
-		
-		
 	}
 }
