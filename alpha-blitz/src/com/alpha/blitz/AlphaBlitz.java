@@ -39,6 +39,7 @@ public class AlphaBlitz implements ApplicationListener {
 	public static Game game;
 	public static Postgame postgame;
 	public static HashSet<String> wordlist;
+	public static String[] poolList;
 	
 	private DictionaryLoader dl;
 	private BitmapFont font;
@@ -57,14 +58,14 @@ public class AlphaBlitz implements ApplicationListener {
 		
 		font = manager.get("data/nint.fnt",BitmapFont.class);
 		
-		wordlist =  new HashSet<String>(45402);
+		wordlist =  new HashSet<String>(15000);
+		poolList = new String[4482];
 
 		dl = new DictionaryLoader();
 		assetsLoaded = false;
 		//dl.run();
 		Gdx.gl.glClearColor(0.8f, 0.8f, 1.0f, 1.0f);
 		gamestate = GameState.SPLASH;
-
 
 	}
 

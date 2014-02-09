@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Rectangle;
 public class Game {
 
 	private final float START_TIME = 2f*60f;
+	private final int POOL_LIST_SIZE = 4482;
 	
 	private final int POOL_SIZE	= 6;
 	private final int POOL_X = 150;
@@ -109,21 +110,50 @@ public class Game {
 		totalWords = 0;
 		currentWords = 0;
 	
+		/*
 		while(true)
 		{
 			generateSemiRandomPool();
 			if(totalWords >= 10)
 				break;
 		}
+		*/
+		
+		fetchGoodPool();
 		
 		
 		
 	}
 	
+	private void fetchGoodPool()
+	{
+		pool.clear();
+		roundWordlist.clear();
+		prevWords.clear();
+		currentWords = 0;
+		
+		String poolString = AlphaBlitz.poolList[MathUtils.random(POOL_LIST_SIZE)];
+		
+		for(int i=0; i < poolString.length(); i++)
+		{
+			pool.add(new Letter(poolString.charAt(i)));
+			
+			pool.get(i).setPoolPos(i);
+			pool.get(i).setBox(POOL_X + POOL_X_PADDING*i + Letter.DEFAULT_LETTER_WIDTH*i,POOL_Y);
+		}
+		
+		for(int i = 0; i < pool.size(); i++)
+			generateValidWords(poolString.substring(i,i+1),poolString.substring(0,i) + poolString.substring(i+1, poolString.length()));
+		
+		totalWords = roundWordlist.size();
+		System.out.println(totalWords);
+	
+	}
 	private void generateSemiRandomPool()
 	{
 		pool.clear();
 		roundWordlist.clear();
+		prevWords.clear();
 		currentWords = 0;
 		for(int i=0; i < POOL_SIZE; i++)
 		{
@@ -187,7 +217,10 @@ public class Game {
 		
 		font.setColor(0f,0f,0f,1f);
 		font.setScale(1.8f);
-		font.draw(batch, ""+ ((int) time/60) + ":" + ((int) time)%60, TIME_X, TIME_Y);
+		if(((int) time)%60 >= 10)
+			font.draw(batch, ""+ ((int) time/60) + ":" + ((int) time)%60, TIME_X, TIME_Y);
+		else
+			font.draw(batch, ""+ ((int) time/60) + ":0" + ((int) time)%60, TIME_X, TIME_Y);
 		font.draw(batch, ""+ score + " PTS",SCORE_X,SCORE_Y);
 		
 		font.setScale(2.2f);
@@ -283,13 +316,10 @@ public class Game {
 			nextButton.clearActivation();
 			if(currentWords >= 5)
 			{
-				while(true)
-				{
-					generateSemiRandomPool();
-					if(totalWords >= 10)
-						break;
-				}
+				fetchGoodPool();
 				prevQueue.clear();
+				candidate.clear();
+
 			}
 			
 		}
@@ -369,12 +399,7 @@ public class Game {
 		prevQueue.clear();
 		candidate.clear();
 		
-		while(true)
-		{
-			generateSemiRandomPool();
-			if(totalWords >= 10)
-				break;
-		}
+		fetchGoodPool();
 		
 		
 		

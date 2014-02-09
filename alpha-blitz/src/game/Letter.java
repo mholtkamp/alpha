@@ -42,6 +42,12 @@ public class Letter extends Button{
 			generateConsonant();
 	}
 	
+	public Letter(char v)
+	{
+		this();
+		value = v;
+		
+	}
 	private void generateVowel()
 	{
 		int v = MathUtils.random(0,4);

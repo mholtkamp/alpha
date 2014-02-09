@@ -53,6 +53,7 @@ public class Postgame {
 		timer -= Gdx.graphics.getDeltaTime();
 		if(Gdx.input.justTouched() && (timer < 4f))
 		{
+			timer = TIMER_START_VALUE;
 			AlphaBlitz.gamestate = GameState.MENU;
 		}
 	}
