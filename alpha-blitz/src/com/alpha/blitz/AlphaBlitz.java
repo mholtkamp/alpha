@@ -25,6 +25,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class AlphaBlitz implements ApplicationListener {
 	
@@ -66,7 +67,7 @@ public class AlphaBlitz implements ApplicationListener {
 		dl = new DictionaryLoader();
 		assetsLoaded = false;
 		//dl.run();
-		Gdx.gl.glClearColor(0.8f, 0.8f, 1.0f, 1.0f);
+		Gdx.gl.glClearColor(1.0f, 0.55f, 0.45f, 1.0f);
 		gamestate = GameState.SPLASH;
 		
 		FileHandle hsf = Gdx.files.external("hsf.txt");
@@ -107,6 +108,7 @@ public class AlphaBlitz implements ApplicationListener {
 		  manager.load("data/nextButtonTex.png",Texture.class);
 		  manager.load("data/prevQueueBgTex.png",Texture.class);
 		  manager.load("data/progressTex.png",Texture.class);
+		  manager.load("data/gameBgTile.png",Texture.class);
 		  
 		  manager.update();
 	}
@@ -170,7 +172,7 @@ public class AlphaBlitz implements ApplicationListener {
 	{
 		update();
 		
-		Gdx.gl.glClearColor(0.8f, 0.8f, 1.0f, 1.0f);
+		Gdx.gl.glClearColor(1.0f, 0.71f, 0.6f, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		batch.setProjectionMatrix(camera.combined);

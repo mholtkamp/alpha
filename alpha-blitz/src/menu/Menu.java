@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 
 public class Menu {
 
@@ -25,6 +26,7 @@ public class Menu {
 	private Texture texture;
 	private BitmapFont font;
 	
+	
 	public Menu()
 	{
 		texture = AlphaBlitz.manager.get("data/menuTex.png", Texture.class);
@@ -37,10 +39,12 @@ public class Menu {
 		startButton.setTexture(AlphaBlitz.manager.get("data/startButtonTex.png",Texture.class));
 		optionsButton.setTexture(AlphaBlitz.manager.get("data/optionsButtonTex.png",Texture.class));
 		exitButton.setTexture(AlphaBlitz.manager.get("data/exitButtonTex.png",Texture.class));
+		
 	}
 	
 	public void update()
 	{
+
 		startButton.update();
 		optionsButton.update();
 		exitButton.update();
@@ -65,6 +69,7 @@ public class Menu {
 	
 	public void render(SpriteBatch batch)
 	{
+		
 		font.setScale(HIGH_SCORE_FONT_SCALE);
 		font.setColor(0.2f,0.2f,1.0f,1f);
 		font.draw(batch, "High Score: " + AlphaBlitz.highScore, HIGH_SCORE_X, HIGH_SCORE_Y);

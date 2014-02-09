@@ -8,6 +8,7 @@ import java.util.Scanner;
 import com.alpha.blitz.AlphaBlitz;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class DictionaryLoader implements Runnable {
 	
@@ -44,6 +45,7 @@ public class DictionaryLoader implements Runnable {
 			}
 		
 			br2.close();
+			
 			finished = true;
 		}
 		catch(Exception ex)

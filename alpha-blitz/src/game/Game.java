@@ -61,8 +61,13 @@ public class Game {
 	private final int CURRENT_WORDS_X = 97;
 	private final int CURRENT_WORDS_Y = 415;
 	
+	private final int BG_TILE_WIDTH = 32;
+	private final int BG_TILE_HEIGHT = 32;
+	private final float BG_SPEED = 25f;
+	
 	private int totalWords;
 	private int currentWords;
+	private float bgTimer;
 	
 	
 	private Button backButton;
@@ -81,6 +86,7 @@ public class Game {
 	
 	private Texture candidateBarTex;
 	private Texture counterTex;
+	private Texture gameBgTile;
 
 	public Game()
 	{
@@ -91,6 +97,7 @@ public class Game {
 		roundWordlist = new ArrayList<String>();
 		candidateBarTex = AlphaBlitz.manager.get("data/candidateBarTex.png",Texture.class);
 		counterTex = AlphaBlitz.manager.get("data/progressTex.png",Texture.class);
+		gameBgTile = AlphaBlitz.manager.get("data/gameBgTile.png",Texture.class);
 		
 		backButton = new Button(BACK_BUTTON_X,BACK_BUTTON_Y,CONTROL_BUTTON_WIDTH,CONTROL_BUTTON_HEIGHT);
 		checkButton = new Button(CHECK_BUTTON_X,CHECK_BUTTON_Y,CONTROL_BUTTON_WIDTH,CONTROL_BUTTON_HEIGHT);
@@ -102,6 +109,7 @@ public class Game {
 		scrambleButton.setTexture(AlphaBlitz.manager.get("data/scrambleButtonTex.png",Texture.class));
 		nextButton.setTexture(AlphaBlitz.manager.get("data/nextButtonTex.png",Texture.class));
 		
+		
 		prevQueue = new PrevQueue();
 		prevWords = new ArrayList<String>();
 		
@@ -109,16 +117,8 @@ public class Game {
 		
 		totalWords = 0;
 		currentWords = 0;
+		bgTimer = 0f;
 	
-		/*
-		while(true)
-		{
-			generateSemiRandomPool();
-			if(totalWords >= 10)
-				break;
-		}
-		*/
-		
 		fetchGoodPool();
 		
 		
@@ -200,6 +200,7 @@ public class Game {
 	
 	public void render(SpriteBatch batch)
 	{
+		renderBackground(batch);
 		batch.draw(candidateBarTex, CAND_X, CAND_Y, CAND_WIDTH, CAND_HEIGHT);
 		batch.draw(counterTex, COUNTER_X,COUNTER_Y, COUNTER_WIDTH,COUNTER_HEIGHT);
 		
@@ -400,6 +401,21 @@ public class Game {
 			Gdx.files.external("hsf.txt").writeString(""+score, false);
 		}
 			
+	}
+	
+	private void renderBackground(SpriteBatch batch)
+	{
+		bgTimer += Gdx.graphics.getDeltaTime()*BG_SPEED;
+		if(bgTimer >= BG_TILE_WIDTH)
+			bgTimer = 0f;
+		for(int i = (int) bgTimer - BG_TILE_WIDTH; i < AlphaBlitz.SCREEN_WIDTH; i += BG_TILE_WIDTH)
+		{
+			for(int j = (int) bgTimer - BG_TILE_HEIGHT; j < AlphaBlitz.SCREEN_HEIGHT; j += BG_TILE_HEIGHT)
+			{
+				batch.draw(gameBgTile, i, j, BG_TILE_WIDTH, BG_TILE_HEIGHT);
+			}
+		}
+		
 	}
 	public void reset()
 	{
